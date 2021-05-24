@@ -10,7 +10,6 @@ Reference: MINIMALIST: Mutual INformatIon Maximisation for Amortised Likelihood 
 
 === Reproduce Plots ===
 
-
 In order to reproduce the plots you need to run the following commands.
 
 1) Run analysis
