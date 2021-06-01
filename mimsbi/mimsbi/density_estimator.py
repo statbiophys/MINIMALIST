@@ -48,6 +48,7 @@ class DensityEstimator(object):
         self.Z=1.
         self.lr=lr
         self.validation_split=validation_split
+        self.batch_size=10000
         
         if seed is not None: np.random.seed(seed = seed)
            
@@ -89,7 +90,7 @@ class DensityEstimator(object):
         
         if seed is not None:
             np.random.seed(seed = seed)
-        
+        self.batch_size=batch_size
         if callbacks is None: callbacks=[ModelCheckpoint(filepath=weights_name,save_best_only=True)]
         if early_stopping: callbacks+=[EarlyStopping(patience=patience)]
         
@@ -130,7 +131,7 @@ class DensityEstimator(object):
         self.model = Model(inputs=input_layer, outputs=output_layer)
         
         if self.optimizer_=='adam':
-            self.optimizer = Adam()
+            self.optimizer = Adam(learning_rate=self.lr)
         elif self.optimizer_=='RMSprop':
             self.optimizer = RMSprop(learning_rate=self.lr)
         else: 

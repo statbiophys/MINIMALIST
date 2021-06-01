@@ -8,16 +8,9 @@ class DklDivergence(DensityEstimator):
         super().__init__(numerator = numerator, denominator = denominator, load_dir = load_dir, 
                          l2_reg = l2_reg, l1_reg=l1_reg, nodes_number=nodes_number, 
                          objective=objective,seed=seed,validation_split=validation_split,optimizer=optimizer)
-
-    # check if you want on train or test
-    def get_value(self,n=10):
-        return np.mean(self.likelihood_test[-n:]),np.std(self.likelihood_test[-n:])
-    
-    def get_bce(self,n=10):
-        return np.mean(self.BCE_test[-n:]),np.std(self.BCE_test[-n:])
     
     def evaluate(self):
-        _,MI,BCE=np.array(self.model.evaluate(self.X_test,self.Y_test,batch_size=10000))*1.44
+        _,MI,BCE=np.array(self.model.evaluate(self.X_test,self.Y_test,batch_size=self.batch_size))*1.44
         return -MI, BCE
     
 class DjsDivergence(object):
@@ -43,12 +36,6 @@ class DjsDivergence(object):
         
         self.dkl1.fit(epochs = epochs, batch_size=batch_size, seed = seed, verbose=verbose, callbacks=callbacks,weights_name=weights_name,early_stopping=early_stopping,patience=patience)
         self.dkl2.fit(epochs = epochs, batch_size=batch_size, seed = seed, verbose=verbose, callbacks=callbacks,weights_name=weights_name,early_stopping=early_stopping,patience=patience)
-        
-    def get_value(self,n=10):
-            
-        d1m,d1s=self.dkl1.get_value(n)
-        d2m,d2s=self.dkl2.get_value(n)
-        return 0.5*(d1m+d2m),np.sqrt(d1s**2+d2s**2)
     
     def evaluate(self):
         MI1,BCE1=self.dkl1.evaluate()
@@ -76,6 +63,8 @@ class MutualInformation(DensityEstimator):
         self.lr=lr
         self.Z=1.
         self.validation_split=validation_split
+        self.batch_size=10000
+        
         if seed is not None: np.random.seed(seed = seed)
         
         if not load_dir is None:
@@ -91,45 +80,48 @@ class MutualInformation(DensityEstimator):
             self.validation_split=validation_split
         self.prepare_data() 
 
-    def prepare_data(self):
+    def prepare_data(self,k=5):
         n_simulations=len(self.values1)
-        shuffling=np.random.choice(np.arange(n_simulations),n_simulations)
 
         self.numerator=np.concatenate([self.values1,self.values2],axis=1)
-        self.denominator=np.concatenate([self.values1,self.values2[shuffling]],axis=1)
+        
+        #multiple reshuflles for bigger negative set
+        dens=[]
+        for _ in range(k):
+            shuffling=np.random.choice(np.arange(n_simulations),n_simulations)
+            dens.append(np.concatenate([self.values1,self.values2[shuffling]],axis=1))
+            
+        self.denominator=np.concatenate(dens,axis=0)
 
         x=np.concatenate([self.numerator,self.denominator],axis=0)
-        y=np.zeros(2*n_simulations)
+        
+        y=np.zeros((1+k)*n_simulations)
+        
+        # indep is class1 joint is class1
         y[n_simulations:]=1
         
-        shuffle=np.random.choice(np.arange(2*n_simulations),2*n_simulations)
-        self.X=x[shuffle][int(self.validation_split*n_simulations):]
-        self.Y=y[shuffle][int(self.validation_split*n_simulations):]
-        self.X_test=x[shuffle][:int(self.validation_split*n_simulations)]
-        self.Y_test=y[shuffle][:int(self.validation_split*n_simulations)]
+        shuffle=np.random.choice(np.arange((1+k)*n_simulations),(1+k)*n_simulations)
+        self.X=x[shuffle][int(self.validation_split*(1+k)*n_simulations):]
+        self.Y=y[shuffle][int(self.validation_split*(1+k)*n_simulations):]
+        self.X_test=x[shuffle][:int(self.validation_split*(1+k)*n_simulations)]
+        self.Y_test=y[shuffle][:int(self.validation_split*(1+k)*n_simulations)]
         
     def log_ratio(self, values1, values2):
         return -self.compute_energy(np.concatenate([values1,values2],axis=1))-np.log(self.Z)
     
-    def get_value(self,n=10):
-        return np.mean(self.likelihood_train[-n:]),np.std(self.likelihood_train[-n:])
-    
-    def get_value_max(self,n=10):
-        return np.max(self.likelihood_train)
-    
-    def get_bce(self,n=10):
-        return np.mean(self.BCE_train[-n:]),np.std(self.BCE_train[-n:])
-    
     def evaluate(self,values1,values2):
-        n_simulations=len(values1)
-        shuffling=np.random.choice(np.arange(n_simulations),n_simulations)
+        # NB different behaviour than other two. Decide what you want.
+        
+        n_negs=len(values2)
+        total_length=len(values2)+len(values1)
+        shuffling=np.random.choice(np.arange(n_negs),n_negs)
 
         numerator=np.concatenate([values1,values2],axis=1)
         denominator=np.concatenate([values1,values2[shuffling]],axis=1)
 
-        x__=np.concatenate([numerator,denominator],axis=0)
-        y=np.zeros(2*n_simulations)
-        y[n_simulations:]=1
-        shuffling=np.random.choice(np.arange(2*n_simulations),2*n_simulations)
-        _,MI,BCE=np.array(self.model.evaluate(x__[shuffling],y[shuffling],batch_size=10000))*1.44
+        x=np.concatenate([numerator,denominator],axis=0)
+        y=np.zeros(total_length)
+        y[len(values1):]=1
+        shuffling=np.random.choice(np.arange(total_length),total_length)
+        _,MI,BCE=np.array(self.model.evaluate(x[shuffling],y[shuffling],batch_size=self.batch_size))*1.44
         return -MI,BCE

@@ -35,7 +35,7 @@ regularization,batch_size,learning_rate=return_hyperpars(objective,model)
 
 if n_simulations> 3e6: 
     reps=1
-    n_sims=1e7
+    n_simulations=n_simulations-2
     
 all_xs=data.values[:,n_par:]
 mean=all_xs.mean(axis=0)
@@ -57,17 +57,19 @@ for rep in tqdm(range(reps)):
     estimator.fit(epochs=5000,batch_size=batch_size,seed=seeds[rep],weights_name='results/weights/'+code+'_mi.h5')
     
     #evaluate
-    MI, BCE= estimator.evaluate(theta_test,x_test)    
-    estimator.mi_value = MI
-    estimator.bce_value = BCE
+    if n_simulations<3e6: 
+        MI, BCE= estimator.evaluate(theta_test,x_test)    
+        estimator.mi_value = MI
+        estimator.bce_value = BCE
 
-    #rejection sampling
-    prior_samples=np.array([prior_sample for i in range(len(x_test))])
-    ratios=estimator.log_ratio(prior_samples,x_test)
-    accepted_samples=np.random.uniform(size=len(ratios))<sigmoid(ratios)
-    print(np.sum(accepted_samples))
-    
-    accepted_test=x_test[accepted_samples][:int(5e4)] # take only the first 50000 ones.
+        #rejection sampling
+        prior_samples=np.array([prior_sample for i in range(len(x_test))])
+        ratios=estimator.log_ratio(prior_samples,x_test)
+        accepted_samples=np.random.uniform(size=len(ratios))<sigmoid(ratios)
+        print(np.sum(accepted_samples))
+
+        accepted_test=x_test[accepted_samples][:int(5e4)] # take only the first 50000 ones.
+        pd.DataFrame(accepted_test).to_csv('results/estimators/'+code+'/accepted_samples.csv.gz',compression='gzip',index=False)
+
     estimator.save_model('results/estimators/'+code)
-    pd.DataFrame(accepted_test).to_csv('results/estimators/'+code+'/accepted_samples.csv.gz',compression='gzip',index=False)
     plot_training(estimator,savename='results/estimators/'+code+'/_training.png')
