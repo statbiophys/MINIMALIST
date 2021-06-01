@@ -160,7 +160,7 @@ class DensityEstimator(object):
         y=cast(y_true,dtype='bool')
         data= math.reduce_mean(boolean_mask(y_pred,math.logical_not(y)))
         gen=math.reduce_mean(kexp(-boolean_mask(y_pred,y)))
-        loggen=klog(gen)
+        loggen=klog(gen)-2.71828182846
         return gen/2.71828182846+data+self.gamma*loggen*loggen
 
     def likelihood(self, y_true, y_pred):
