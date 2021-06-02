@@ -23,7 +23,7 @@ seeds=(np.arange(reps)*20).astype(np.int)
 n_par,prior_sample,boundaries,default_measurement_time,prior,simulator= return_pars(model)
 
 # read data
-folder='~/minimalistic/results/'
+folder='results/'
 code='data_{}'.format(model)
 data=pd.read_csv(folder+'data/'+code + '.csv.gz')
 all_xs=data.values[:,n_par:]
