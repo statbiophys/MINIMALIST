@@ -12,11 +12,15 @@ Reference: MINIMALIST: Mutual INformatIon Maximisation for Amortised Likelihood 
 
 In order to reproduce the plots you need to run the following commands.
 
-1) Run analysis
+1) Install the mimsbi package
+
+Enter the mimsbi folder and run the command "python setup.py install"
+
+2) Run analysis
 
 To run the analysis for the the 4 task run the script run_analysis.py with the options: ou,bd,sir and lorentz. 
 
-2) Plot the results.
+3) Plot the results.
 
 To recreate Fig 2, run fig2.py
 

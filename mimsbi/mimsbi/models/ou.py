@@ -1,3 +1,14 @@
+"""
+
+Created on 2 May 2021
+
+@author: None
+
+Stochastic simulation of Ornstein–Uhlenbeck process.
+Based on code and structure from the software https://github.com/montefiore-ai/hypothesis
+
+"""
+
 from mimsbi.models.gillespie import Gillespie
 import numpy as np    
 import numpy.random as rng

@@ -1,10 +1,21 @@
+"""
+
+Created on 2 May 2021
+
+@author: None
+
+Gillespie simulation of SIR model. 
+Based on code and structure from the software https://github.com/montefiore-ai/hypothesis
+
+"""
+
 from scipy.stats import uniform
 from mimsbi.models.gillespie import Gillespie
 import numpy as np    
 import numpy.random as rng
 
 class Process(Gillespie):
-    """Implements the birth-death model."""
+    """Implements the SIR model."""
 
     def _calc_propensities(self):
         S,I,R = self.state
