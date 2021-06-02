@@ -33,4 +33,4 @@ To recreate Fig 4, run fig4.py
 - matplotlib
 - tqdm
 
-This directory includes a stable version of the mimsbi package. The full package is available in ...
+This directory includes a stable version of the mimsbi package.  <!-- The full package is available in ... -->
