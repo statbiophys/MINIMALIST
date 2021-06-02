@@ -1,7 +1,7 @@
-from mimsbi.density_estimator import DensityEstimator
+from mimsbi.density_ratio_estimator import DensityRatioEstimator
 import numpy as np
 
-class DklDivergence(DensityEstimator):
+class DklDivergence(DensityRatioEstimator):
     def __init__(self, numerator = [], denominator = [], load_dir = None, 
                  l2_reg = 0., l1_reg=0., nodes_number=50, objective='MINE',
                  seed=None,validation_split=0.1,optimizer='RMSprop'):
@@ -43,7 +43,7 @@ class DjsDivergence(object):
         return 0.5*(MI1+MI2), 0.5*(BCE1+BCE2)
     
     
-class MutualInformation(DensityEstimator):
+class MutualInformation(DensityRatioEstimator):
     
     def __init__(self, values1 = [], values2 = [], load_dir = None, 
                  l2_reg = 0., l1_reg=0., nodes_number=50, objective='MINE',

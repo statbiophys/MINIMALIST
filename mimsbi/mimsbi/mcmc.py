@@ -5,7 +5,11 @@ from copy import copy
 from tqdm import tqdm
 
 class NormalTransition:
-    r""" Symmetric normal transition with std sigma, jump from theta0 """
+    """ 
+    
+    Symmetric normal transition with std sigma, jump from theta0 
+    
+    """
 
     def __init__(self, sigma):
         self.sigma = sigma 
@@ -14,7 +18,11 @@ class NormalTransition:
         return rng.randn(*theta0.shape)*self.sigma + theta0
 
 class Chain:
-    r""" Process MCMC chain """
+    """ 
+    
+    Process MCMC chain 
+    
+    """
 
     def __init__(self, samples, acceptances):
         self.acceptances = np.array(acceptances)
@@ -51,7 +59,11 @@ class Chain:
         return samples_flat[self.ratios.argmax()]
     
 class MCMC:
-    r""" Multi-dim MCMC """
+    """
+    
+    Multi-dim MCMC 
+    
+    """
     
     def __init__(self, prior, ratio_estimator, transition):
         self.denominator = None
@@ -87,7 +99,12 @@ class MCMC:
         self.denominator = None
         
     def sample(self, theta, xs, length):
-        r""" Get length-long MCMC chain starting at theta """
+        """ 
+        
+        Get length-long MCMC chain starting at theta 
+        
+        """
+        
         acceptances = []
         samples = []
         self.reset()  

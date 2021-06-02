@@ -11,16 +11,18 @@ mlp.rcParams.update({'font.size': 14})
 models=['ou','bd','sir']
 n_obs={'sir':2,'ou':5,'bd':5}
 n=100
-n_examples={'sir':1,'ou':2,'bd':2}
 x_labels1=[r'$\sigma$',r'$\alpha$',r'$\beta$']
 x_labels2=[r'$\mu$',r'$\beta$',r'$\gamma$']
 model_names=['Ornstein–Uhlenbeck','Birth-Death','SIR','Lorenz attractor']
 letters=list('ABCDEFGHIJKLMNO')
 l=0
-np.random.seed(123)
+np.random.seed(1)
 
+c0='gold' 
+c1='C9'
 fig=plt.figure(figsize=(12,6),dpi=200)
 for j,model in enumerate(models):
+
     objectives=['BCE']
     estimators=[]
     
@@ -44,24 +46,24 @@ for j,model in enumerate(models):
     if model=='sir':
         times,states=simulator.trajectory(prior_sample)
         selection=simulator.return_selection(times)
-        plt.plot(times,states[:,0],color='C4')
-        plt.plot(times,states[:,1],color='k')
-        plt.plot(times,states[:,2],color='C9')
+        plt.plot(times,states[:,0],color='C4',label='S')
+        plt.plot(times,states[:,1],color=c1,label='I')
+        plt.plot(times,states[:,2],color='darkgreen',label='R')
+        plt.legend(frameon=False,handlelength=1)
 
         plt.gca().set_prop_cycle(None)
-        plt.scatter(np.array(times)[selection],states[selection][:,0],zorder=1,color='white',edgecolors='C4',linewidth=1.5)
-        plt.scatter(np.array(times)[selection],states[selection][:,1],zorder=1,color='white',edgecolors='k',linewidth=1.5)
-        plt.scatter(np.array(times)[selection],states[selection][:,2],zorder=1,color='white',edgecolors='C9',linewidth=1.5)
+        plt.scatter(np.array(times)[selection],states[selection][:,0],zorder=10,color='white',edgecolors='C4',linewidth=1.5,facecolor='w')
+        plt.scatter(np.array(times)[selection],states[selection][:,1],zorder=11,color='white',edgecolors=c1,linewidth=1.5,facecolor='w')
+        #plt.scatter(np.array(times)[selection],states[selection][:,2],zorder=13,color='white',edgecolors=c1,linewidth=1.5,facecolor='w')
     else:
             times,states=simulator.trajectory(prior_sample)
             selection=simulator.return_selection(times)
-            plt.plot(times,states,c='r')
-            plt.scatter(np.array(times)[selection],states[selection],zorder=1,color='white',edgecolors='r',linewidth=1.5)
-            
+            plt.plot(times,states,c=c1)
+            plt.scatter(np.array(times)[selection],states[selection],zorder=10,color='white',edgecolors=c1,linewidth=1.5,facecolor='w')
             times,states=simulator.trajectory(prior_sample)
             selection=simulator.return_selection(times)
-            plt.plot(times,states,c='k')
-            plt.scatter(np.array(times)[selection],states[selection],zorder=1,color='white',edgecolors='k',linewidth=1.5)
+            plt.plot(times,states,c=c0)
+            plt.scatter(np.array(times)[selection],states[selection],zorder=10,color='white',edgecolors=c0,linewidth=1.5,facecolor='w')
     plt.xlabel('time')
     plt.ylabel('n')
     plt.ticklabel_format(axis="y", style="sci", scilimits=(0,0),useMathText=True)
@@ -119,12 +121,12 @@ plt.locator_params(axis='y', nbins=4)
 
 times,states=simulator.trajectory(prior_sample)
 selection=simulator.return_selection(times)
-plt.plot(xs=states[:,0],ys=states[:,1],zs=states[:,2],c='r')
-ax.scatter(xs=states[selection,0],ys=states[selection,1],zs=states[selection,2],edgecolors='r',linewidth=1.5)
+plt.plot(xs=states[:,0],ys=states[:,1],zs=states[:,2],c=c1)
+ax.scatter(xs=states[selection,0],ys=states[selection,1],zs=states[selection,2],edgecolors=c1,linewidth=1.5,zorder=10)
 times,states=simulator.trajectory(prior_sample)
 selection=simulator.return_selection(times)
-plt.plot(xs=states[:,0],ys=states[:,1],zs=states[:,2],c='k')
-ax.scatter(xs=states[selection,0],ys=states[selection,1],zs=states[selection,2],edgecolors='k',linewidth=1.5)
+plt.plot(xs=states[:,0],ys=states[:,1],zs=states[:,2],c=c0)
+ax.scatter(xs=states[selection,0],ys=states[selection,1],zs=states[selection,2],edgecolors=c0,linewidth=1.5,zorder=10)
 ax.set_axis_off()
 
 matrices=[]

@@ -22,6 +22,8 @@ def plotit(obj):
     plt.ylabel(obj)
     plt.xlabel('')
     plt.ticklabel_format(axis="y", style="sci", scilimits=(0,0),useMathText=True)
+    left, right =plt.ylim()
+    plt.ylim([0,right+0.1*right])
 
 letters=list('ABCDEFGHIJKLMNO')
 plt.figure(figsize=(12,9),dpi=200)
@@ -42,32 +44,34 @@ for j,model in enumerate(models):
         dfs['sims']=r'$10^{'+str(i)+'}$'
         dfs_.append(dfs)
     dfs_=pd.concat(dfs_)
-
+    
     ax=plt.subplot(3,4,1+j)
     ax.annotate(letters[l], xy=(-0.1, 1.15), xycoords='axes fraction', textcoords='offset points', fontsize=15,xytext=(0, -5), weight='bold', ha='right',  va='top')
     l+=1
     plt.title(model_names[j])
     plotit('MI')
-    plt.ylabel('mutual information')
+    plt.ylabel('mutual information [bits]')
     if model!='ou':    
         plt.ylabel('')
         plt.legend([],[], frameon=False)
-
-        
+    
+    ax.spines['bottom'].set_position('zero')
     ax=plt.subplot(3,4,5+j)
     ax.annotate(letters[l], xy=(-0.1, 1.15), xycoords='axes fraction', textcoords='offset points', fontsize=15,xytext=(0, -5), weight='bold', ha='right',  va='top')
     l+=1
     plotit('djs_scan')
-    plt.ylabel(r'$D_{JS}(Posteriors)$')
+    plt.ylabel(r'$D_{JS}(Posteriors)$ [bits]')
     if model!='ou':    plt.ylabel('')
     plt.legend([],[], frameon=False)    
+    ax.spines['bottom'].set_position('zero')
     ax=plt.subplot(3,4,9+j)
     ax.annotate(letters[l], xy=(-0.1, 1.15), xycoords='axes fraction', textcoords='offset points', fontsize=15,xytext=(0, -5), weight='bold', ha='right',  va='top')
     l+=1
     plotit('djs_mcmc_like')
-    plt.ylabel(r'$D_{JS}(Likelihoods)$')
+    plt.ylabel(r'$D_{JS}(Likelihoods)$ [bits]')
     if model!='ou':    plt.ylabel('')
+    plt.xlabel('N')
     plt.legend([],[], frameon=False)
-
+    ax.spines['bottom'].set_position('zero')
 plt.tight_layout(pad=1.1)
 plt.savefig('results/plots/fig4.pdf')

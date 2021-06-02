@@ -35,7 +35,8 @@ regularization,batch_size,learning_rate=return_hyperpars(objective,model)
 
 if n_simulations> 3e6: 
     reps=1
-    n_simulations=n_simulations-2
+    n_sims=1e7
+    batch_size=10000
     
 all_xs=data.values[:,n_par:]
 mean=all_xs.mean(axis=0)
@@ -55,9 +56,11 @@ for rep in tqdm(range(reps)):
     
     estimator=MutualInformation(values1=theta,values2=x,objective=objective,seed=seeds[rep],l2_reg=regularization,validation_split=val_split,lr=learning_rate)
     estimator.fit(epochs=5000,batch_size=batch_size,seed=seeds[rep],weights_name='results/weights/'+code+'_mi.h5')
+    estimator.save_model('results/estimators/'+code)    
+    plot_training(estimator,savename='results/estimators/'+code+'/_training.png')
     
     #evaluate
-    if n_simulations<3e6: 
+    if n_simulations< 3e6: 
         MI, BCE= estimator.evaluate(theta_test,x_test)    
         estimator.mi_value = MI
         estimator.bce_value = BCE
@@ -69,7 +72,5 @@ for rep in tqdm(range(reps)):
         print(np.sum(accepted_samples))
 
         accepted_test=x_test[accepted_samples][:int(5e4)] # take only the first 50000 ones.
-        pd.DataFrame(accepted_test).to_csv('results/estimators/'+code+'/accepted_samples.csv.gz',compression='gzip',index=False)
 
-    estimator.save_model('results/estimators/'+code)
-    plot_training(estimator,savename='results/estimators/'+code+'/_training.png')
+        pd.DataFrame(accepted_test).to_csv('results/estimators/'+code+'/accepted_samples.csv.gz',compression='gzip',index=False)

@@ -12,16 +12,15 @@ mlp.rcParams.update({'font.size': 14})
 models=['ou','bd','sir']
 n_obs={'sir':2,'ou':5,'bd':5}
 n=100
-n_examples={'sir':1,'ou':2,'bd':2}
 x_labels1=[r'$\sigma$',r'$\alpha$',r'$\beta$']
 x_labels2=[r'$\mu$',r'$\beta$',r'$\gamma$']
 model_names=['Ornstein–Uhlenbeck','Birth-Death','SIR','Lorenz attractor']
 letters=list('ABCDEFGHIJKLMNO')
 l=0
-np.random.seed(0)
 
 fig=plt.figure(figsize=(12,6),dpi=200)
 for j,model in enumerate(models):
+    np.random.seed(123)
     objectives=['MINE','fMINE','BCE']
     estimators=[]
     
