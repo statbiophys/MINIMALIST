@@ -1,3 +1,13 @@
+"""
+
+Created on 2 May 2021
+
+@author: None
+
+We use these functions to run in parallel the simulations
+
+"""
+
 from multiprocessing import Pool, cpu_count
 from tqdm import tqdm
 import numpy as np

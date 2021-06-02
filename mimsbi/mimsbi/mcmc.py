@@ -1,3 +1,16 @@
+"""
+
+Created on 2 May 2021
+
+@author: None
+
+Functions for mcmc, copied and adapted from multiple sources:
+    - https://github.com/montefiore-ai/hypothesis
+    - https://github.com/mackelab/sbi
+
+"""
+
+
 import numpy as np
 import warnings
 import numpy.random as rng
@@ -20,7 +33,7 @@ class NormalTransition:
 class Chain:
     """ 
     
-    Process MCMC chain 
+    Process MCMC chain
     
     """
 
@@ -61,7 +74,7 @@ class Chain:
 class MCMC:
     """
     
-    Multi-dim MCMC 
+    Multi-dim MCMC class
     
     """
     

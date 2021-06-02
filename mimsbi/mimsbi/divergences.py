@@ -1,7 +1,23 @@
+"""
+
+Created on 2 May 2021
+
+@author: None
+
+"""
+
 from mimsbi.density_ratio_estimator import DensityRatioEstimator
 import numpy as np
 
 class DklDivergence(DensityRatioEstimator):
+    """
+    
+    Kullback Leibler Divergence through density ratio estimation.
+    It is a simple wrapping of the DensityRatioEstimator class
+    
+    """
+    
+    
     def __init__(self, numerator = [], denominator = [], load_dir = None, 
                  l2_reg = 0., l1_reg=0., nodes_number=50, objective='MINE',
                  seed=None,validation_split=0.1,optimizer='RMSprop'):
@@ -14,6 +30,12 @@ class DklDivergence(DensityRatioEstimator):
         return -MI, BCE
     
 class DjsDivergence(object):
+    """
+    
+    Jensen-Shannon Divergence through density ratio estimation.
+    It is a composition of two DklDivergence class for density ratio estimation.
+    
+    """
     
     def __init__(self, values1 = [], values2 = [], load_dir = None, 
                  l2_reg = 0., l1_reg=0., nodes_number=50, objective='MINE',
@@ -44,6 +66,13 @@ class DjsDivergence(object):
     
     
 class MutualInformation(DensityRatioEstimator):
+    """
+    
+    Mutual Information through density ratio estimation.
+    It wraps around the DensityRatioEstimator class but it is specific
+    to the ratio of joint over independent distributions.
+    
+    """
     
     def __init__(self, values1 = [], values2 = [], load_dir = None, 
                  l2_reg = 0., l1_reg=0., nodes_number=50, objective='MINE',
@@ -72,15 +101,13 @@ class MutualInformation(DensityRatioEstimator):
         else:
             self.prepare_data() 
             self.update_model_structure(initialize=True)
-    
-    def add_data(self,values1=[],values2=[],validation_split=None):
-        self.values1 = values1
-        self.values2 = values2
-        if not validation_split is None: 
-            self.validation_split=validation_split
-        self.prepare_data() 
 
     def prepare_data(self,k=5):
+        """
+        
+        Prepare inputs for training and performs validation split
+
+        """
         n_simulations=len(self.values1)
 
         self.numerator=np.concatenate([self.values1,self.values2],axis=1)
@@ -107,9 +134,38 @@ class MutualInformation(DensityRatioEstimator):
         self.Y_test=y[shuffle][:int(self.validation_split*(1+k)*n_simulations)]
         
     def log_ratio(self, values1, values2):
+        """
+        
+        log ratio for mcmc
+        
+        """
         return -self.compute_energy(np.concatenate([values1,values2],axis=1))-np.log(self.Z)
     
     def evaluate(self,values1,values2):
+        """
+        
+        evaluate estimator on test data
+                
+        Parameters
+        ----------
+        
+        values1 : ndarray
+            List of samples from first variable
+        
+        values2 : ndarray
+            List of samples from second variable
+       
+        Returns
+        -------
+        
+        MI: float
+            estimated mutual information between variables
+            
+        BCE: float
+            binary cross entropy loss for the classification between
+            independent and joint distribution
+        
+        """
         # NB different behaviour than other two. Decide what you want.
         
         n_negs=len(values2)

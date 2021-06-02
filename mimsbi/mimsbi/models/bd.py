@@ -1,3 +1,15 @@
+"""
+
+Created on 2 May 2021
+
+@author: None
+
+Gillespie simulation of birth death model. 
+Based on code and structure from the software https://github.com/montefiore-ai/hypothesis
+
+"""
+
+
 from mimsbi.models.gillespie import Gillespie
 import numpy as np    
 import numpy.random as rng
@@ -79,11 +91,6 @@ class Simulator:
         return selection
     
     def calc_summary_stats(self, states,times,norm=100,n_values=None):
-
-        """
-        Given a sequence of states produced by a simulation, calculates and returns a vector of summary statistics.
-        Assumes that the sequence of states is uniformly sampled in time.
-        """
 
         N = states.shape[0]
         x = states[:, 0].copy()

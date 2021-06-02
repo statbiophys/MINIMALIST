@@ -1,3 +1,14 @@
+"""
+
+Created on 2 May 2021
+
+@author: None
+
+Gillespie algorithm. 
+Based on code and structure from the software https://github.com/montefiore-ai/hypothesis
+
+"""
+
 from __future__ import division
 import numpy as np
 import numpy.random as rng  

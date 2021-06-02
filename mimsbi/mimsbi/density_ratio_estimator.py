@@ -41,6 +41,7 @@ except (ImportError, AttributeError):
 
 class DensityRatioEstimator(object):
     """
+    
     Class used to infer the density ratio estimator. We use it for the specific case of
     joint vs independent but can in principle be used for any density ratio. 
     This ratio is by default inferred using a 2 hidden layer vanilla network.
@@ -93,8 +94,15 @@ class DensityRatioEstimator(object):
         
     fit(epochs, batch_size=5000, seed = None, verbose=0, callbacks=None,weights_name='weights.h5',early_stopping=True,patience=3)
         infer the density ratio estimator
-        
     
+    update_model_structure(output_layer=[],input_layer=[],initialize=False)
+        define architecture of the network. For custom artchitectures use the input_layer and output_layer paramters
+        
+    save_model(save_dir, force=True, data=False)
+        save model to directory
+        
+    load_model(load_dir = None, verbose = True,load_data=False)
+        load model from directory
     
     """
     
@@ -127,6 +135,13 @@ class DensityRatioEstimator(object):
             self.update_model_structure(initialize=True)
         
     def prepare_data(self):
+        
+        """
+        
+        Prepare inputs for training and performs validation split
+
+        """
+        
         n_num=len(self.numerator)
         n_den=len(self.denominator)
         
@@ -146,12 +161,58 @@ class DensityRatioEstimator(object):
         self.Y_test=y[shuffle][:int(self.validation_split*2*n_num)]
             
     def compute_energy(self,data=None):
+        
+        """
+        
+        Compute energy of multiple samples
+        
+        Parameters
+        ----------
+        
+        data : list/ndarray
+            List of samples 
+       
+        Returns
+        -------
+        
+        ndarray
+            energies for each sample
+            
+        """
         return self.model.predict(data)[:, 0]
         
-    def fit(self, epochs = 10, batch_size=5000, seed = None, verbose=0, callbacks=None,weights_name='weights.h5',early_stopping=True,patience=30):
+    def fit(self, epochs = 1000, batch_size=5000, verbose=0, callbacks=None,weights_name='weights.h5',early_stopping=True,patience=30):
+        """
         
-        if seed is not None:
-            np.random.seed(seed = seed)
+        infer the density ratio estimator        
+        
+        
+        Parameters
+        ----------
+        
+        epochs : int
+            max number of epochs
+        
+        batch_size: int
+            size of minibatch
+        
+        verbose: int
+            verbose paramter of keras fit function
+            
+        callbacks: list
+            list of custom callbacks
+        
+        weights_name: str
+            name of weights for the early stopping callback
+        
+        early_stopping: bool
+            early stopping by monitoring the likelihood
+        
+        patience: int
+            patience of the early stopping callback
+        
+            
+        """
         self.batch_size=batch_size
         if callbacks is None: callbacks=[ModelCheckpoint(filepath=weights_name,save_best_only=True)]
         if early_stopping: callbacks+=[EarlyStopping(patience=patience)]
@@ -179,6 +240,25 @@ class DensityRatioEstimator(object):
             
     def update_model_structure(self,output_layer=[],input_layer=[],initialize=False):
         
+        """
+        
+        define architecture of the network. For custom artchitectures use the input_layer and output_layer paramters
+        
+        
+        Parameters
+        ----------
+        
+        output_layer : keras layer
+            custom keras output layer
+        
+        input_layer: keras layer
+            custom keras input layer
+            
+        initialize: bool
+            if True it reinitializes the network to basic structure
+        
+            
+        """
         length_input=self.X.shape[1]
         l2_reg=copy(self.l2_reg)
         l1_reg=copy(self.l1_reg)
@@ -213,12 +293,24 @@ class DensityRatioEstimator(object):
         return True
 
     def loss(self, y_true, y_pred):
+        
+        """
+        
+        This is the "I" loss in the arxiv paper with added regularization
+        
+        """
         y=cast(y_true,dtype='bool')
         data= math.reduce_mean(boolean_mask(y_pred,math.logical_not(y)))
         gen= math.reduce_logsumexp(-boolean_mask(y_pred,y))-klog(ksum(y_true))
         return gen+data+self.gamma*gen*gen
     
     def f_loss(self, y_true, y_pred):
+        
+        """
+        
+        This is the "L_f" loss in the arxiv paper ... 
+        
+        """
         y=cast(y_true,dtype='bool')
         data= math.reduce_mean(boolean_mask(y_pred,math.logical_not(y)))
         gen=math.reduce_mean(kexp(-boolean_mask(y_pred,y)))
@@ -226,15 +318,44 @@ class DensityRatioEstimator(object):
         return gen/2.71828182846+data+self.gamma*loggen*loggen
 
     def likelihood(self, y_true, y_pred):
+        
+        """
+        
+        This is the "I" loss in the arxiv paper with added regularization
+        
+        """
         y=cast(y_true,dtype='bool')
         data= math.reduce_mean(boolean_mask(y_pred,math.logical_not(y)))
         gen= math.reduce_logsumexp(-boolean_mask(y_pred,y))-klog(ksum(y_true))
         return gen+data
     
     def log_ratio(self, data):
+        """
+        
+        log ratio for mcmc
+        
+        """
         return -self.compute_energy(data)-np.log(self.Z)
 
     def save_model(self, save_dir, force=True, data=False):
+        """
+        
+        save model to directory
+        
+        
+        Parameters
+        ----------
+        
+        save_dir : str
+            path of the directory to save
+        
+        force: bool
+            force the saving if the directory already contains a model. Otherwise asks for permission.
+            
+        data: bool
+            if True saves dataset as well
+            
+        """
         # save model
         
         if os.path.isdir(save_dir):
@@ -258,8 +379,22 @@ class DensityRatioEstimator(object):
 
         return 0
 
-    def load_model(self, load_dir = None, verbose = True,load_data=False):
-
+    def load_model(self, load_dir = None,load_data=False):
+        """
+        
+        load model from directory
+        
+        
+        Parameters
+        ----------
+        
+        load_dir : str
+            path of the directory to load the model from
+        
+        load_data: bool
+            if True loads data as well
+            
+        """
         if load_dir is not None:
             if not os.path.isdir(load_dir):
                 print('Directory for loading model does not exist (' + load_dir + ')')
