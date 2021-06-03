@@ -4,7 +4,7 @@ Written by Giulio Isacchini, MPIDS Göttingen - ENS Paris and Natanael Spisak, E
 
 The code is written in Python3. Last updated on 24-05-2021
 
-Reference: MINIMALIST: Mutual INformatIon Maximisation for Amortized Likelihood Inference from Sampled Trajectories, Giulio Isacchini, Natanel Spisak, Armita Nourmohammad, Thierry Mora and Aleksandra M. Walczak
+Reference: MINIMALIST: Mutual INformatIon Maximization for Amortized Likelihood Inference from Sampled Trajectories, Giulio Isacchini, Natanael Spisak, Armita Nourmohammad, Thierry Mora and Aleksandra M. Walczak
 
 ### To reproduce the figures
 
