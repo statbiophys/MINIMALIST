@@ -37,6 +37,8 @@ The package allows to infer the likelihood-to-evidence ratio model using one of 
 3) likelihood-to-evidence ratio inference  `scripts/infer_estimators.py`
 4) posterior evaluation  `scripts/compare_estimators.py`
 
+To use the scripts with a new model, its specifications need to be added in `scripts/utils.py` `return_pars` function. A simple data generation to posterior evaluation protocol is also available in the `mimsbi/tutorial.ipynb` Jupyter notebook.
+
 ### Requisites
 
 - `tensorflow>2.1`
