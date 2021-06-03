@@ -22,11 +22,11 @@ To run the analysis for the the 4 task run the script run_analysis.py with the o
 
 3) Plot the results.
 
-To recreate Fig 2, run `fig2.py`
+For Figure 2, run `fig2.py`
 
-To recreate Fig 3 run `fig3.py`
+For Figure 3 run `fig3.py`
 
-To recreate Fig 4, run `fig4.py`
+For Figure 4, run `fig4.py`
 
 #### Requisites
 
