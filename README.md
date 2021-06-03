@@ -33,7 +33,7 @@ For Figure 4, run `fig4.py`
 
 This directory includes a stable version of the `mimsbi` package.  <!-- The full package is available in ... -->
 
-The package allows to infer the likelihood-to-evidence ratio model using one of three objective functions: MINE, FDIV or BCE. The package has implemented simulators for the processes studied in the MINIMALIST paper: Ornstein-Uhlenbeck, birth-death, SIR and Lorenz processes. To add another functionality one needs to add a Simulator class to `mimsbi/models`. Then, inference can be performed using the `DensityRatioEstimator` class. For example of usage go to the `scripts` directory where separate files can be used to 
+The package allows to infer the likelihood-to-evidence ratio model using one of three objective functions: MINE, FDIV or BCE. The package has implemented simulators for the processes studied in the MINIMALIST paper: Ornstein-Uhlenbeck, birth-death, SIR and Lorenz processes. To add another functionality one needs to add a new `Simulator` class to `mimsbi/models`. Then, inference can be performed using the `DensityRatioEstimator` class. For example of usage go to the `scripts` directory where separate files can be used to 
 1) simulate the data  `scripts/simulate.py`
 2) tune network hyperparameters  `scripts/infer_hyperpars.py`
 3) likelihood-to-evidence ratio inference  `scripts/infer_estimators.py`
