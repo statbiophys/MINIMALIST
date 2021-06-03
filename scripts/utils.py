@@ -40,7 +40,7 @@ def return_pars(model):
         boundaries=[[0.,2.],[-10,10]]
         prior=Prior()
         simulator=Simulator()
-    elif model=='lorentz':
+    elif model=='lorenz' or model=='lorentz':
         from mimsbi.models.lorentzPar import Simulator, Prior
         n_par=1
         n_values=5
