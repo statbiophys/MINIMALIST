@@ -10,7 +10,7 @@ Reference: MINIMALIST: Mutual INformatIon Maximisation for Amortized Likelihood 
 
 In order to reproduce the plots you need to run the following commands.
 
-1) Install the mimsbi package
+1) Install the `mimsbi` package
 
 Enter the mimsbi folder and run the command `python setup.py install`
 
