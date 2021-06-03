@@ -18,7 +18,7 @@ Enter the mimsbi folder and run the command `python setup.py install`
 
 2) Run analysis
 
-To run the analysis for the the 4 task run the script run_analysis.py with the options: `ou`,`bd`,`sir` or `lorenz`. 
+To run the analysis for the the 4 task run the script run_analysis.py with the options: `ou`,`bd`,`sir` and/or `lorenz`. 
 
 3) Plot the results.
 
