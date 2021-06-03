@@ -8,33 +8,35 @@ Last updated on 24-05-2021
 
 Reference: MINIMALIST: Mutual INformatIon Maximisation for Amortized Likelihood Inference from Sampled Trajectories, Giulio Isacchini, Natanel Spisak, Armita Nourmohammad, Aleksandra M. Walczak, Thierry Mora
 
-### To Reproduce Plots
+### To reproduce the figures
 
 In order to reproduce the plots you need to run the following commands.
 
 1) Install the mimsbi package
 
-Enter the mimsbi folder and run the command "python setup.py install"
+Enter the mimsbi folder and run the command `python setup.py install`
 
 2) Run analysis
 
-To run the analysis for the the 4 task run the script run_analysis.py with the options: ou,bd,sir and lorentz. 
+To run the analysis for the the 4 task run the script run_analysis.py with the options: `ou`,`bd`,`sir` or `lorenz`. 
 
 3) Plot the results.
 
-To recreate Fig 2, run fig2.py
+To recreate Fig 2, run `fig2.py`
 
-To recreate Fig 3 run fig3.py
+To recreate Fig 3 run `fig3.py`
 
-To recreate Fig 4, run fig4.py
+To recreate Fig 4, run `fig4.py`
 
-=== Requisites ===
+#### Requisites
 
-- tensorflow>2.1
-- numpy
-- pandas
-- scipy
-- matplotlib
-- tqdm
+- `tensorflow>2.1`
+- `numpy`
+- `pandas`
+- `scipy`
+- `matplotlib`
+- `tqdm`
 
-This directory includes a stable version of the mimsbi package.  <!-- The full package is available in ... -->
+### To do more
+
+This directory includes a stable version of the `mimsbi` package.  <!-- The full package is available in ... -->
