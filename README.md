@@ -6,9 +6,9 @@ The code is written in Python3.
 
 Last updated on 24-05-2021
 
-Reference: MINIMALIST: Mutual INformatIon Maximisation for Amortised Likelihood Inference from Sampled Trajectories, Giulio Isacchini, Natanel Spisak, Armita Nourmohammad, Aleksandra M. Walczak, Thierry Mora
+Reference: MINIMALIST: Mutual INformatIon Maximisation for Amortized Likelihood Inference from Sampled Trajectories, Giulio Isacchini, Natanel Spisak, Armita Nourmohammad, Aleksandra M. Walczak, Thierry Mora
 
-=== Reproduce Plots ===
+# To Reproduce Plots
 
 In order to reproduce the plots you need to run the following commands.
 
