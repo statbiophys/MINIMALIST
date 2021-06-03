@@ -27,7 +27,7 @@ For Figure 3 run `fig3.py`
 For Figure 4, run `fig4.py`
 
 
-### To do more
+### Extended usage
 
 This directory includes a stable version of the `mimsbi` package.  <!-- The full package is available in ... -->
 
